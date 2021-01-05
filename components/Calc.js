@@ -64,7 +64,7 @@ const Calc = () => {
 
             <div className="grid">
                 <div>Gesammt:</div>
-                <div className="ergebnis">{((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1)).toFixed(2)} €</div>
+                <div className="ergebnis">{((((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1)) * 1).toFixed(2))} €</div>
 
                 <div className="ergebnis">{((Object.values(values)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / 1.07).toFixed(2) * 1)), 0))} €</div>
 
