@@ -44,8 +44,8 @@ const Calc = () => {
                         onChange={({ target }) => setValues(state => ({ ...state, [target.name]: target.value }))}
                         value={values[`pic${ele}`]}
                     />
-                    <div className="ergebnis">{(values[`pic${ele}`] / 1.07).toFixed(2)} €</div>
-                    <div className="ergebnis">{(values[`pic${ele}`] - (values[`pic${ele}`] / 1.07)).toFixed(2)} €</div>
+                    <div className="ergebnis">{(values[`pic${ele}`] / 1.05).toFixed(2)} €</div>
+                    <div className="ergebnis">{(values[`pic${ele}`] - (values[`pic${ele}`] / 1.05)).toFixed(2)} €</div>
                 </div>
                 <div className="grid">
                     <span>Rahmen {ele + 1}:</span>
@@ -55,8 +55,8 @@ const Calc = () => {
                         onChange={({ target }) => setRahmen(state => ({ ...state, [target.name]: target.value }))}
                         value={rahmen[ele]}
                     />
-                    <div className="ergebnis">{(rahmen[`rahmen${ele}`] / 1.07).toFixed(2)} €</div>
-                    <div className="ergebnis">{(rahmen[`rahmen${ele}`] - (rahmen[`rahmen${ele}`] / 1.07)).toFixed(2)} €</div>
+                    <div className="ergebnis">{(rahmen[`rahmen${ele}`] / 1.05).toFixed(2)} €</div>
+                    <div className="ergebnis">{(rahmen[`rahmen${ele}`] - (rahmen[`rahmen${ele}`] / 1.05)).toFixed(2)} €</div>
                 </div>
             </div>
             )}
@@ -66,9 +66,9 @@ const Calc = () => {
                 <div>Gesammt:</div>
                 <div className="ergebnis">{((((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1)) * 1).toFixed(2))} €</div>
 
-                <div className="ergebnis">{((Object.values(values)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / 1.07).toFixed(2) * 1)), 0))} €</div>
+                <div className="ergebnis">{((Object.values(values)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / 1.05).toFixed(2) * 1)), 0))} €</div>
 
-                <div className="ergebnis">{((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) - ((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) / 1.07)).toFixed(2)} €</div>
+                <div className="ergebnis">{((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) - ((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) / 1.05)).toFixed(2)} €</div>
             </div>
             <span className="text">Rabatt:</span><input type="number" name="rabatt" onChange={({ target }) => setRabatt(target.value)} value={rabatt} />
 
