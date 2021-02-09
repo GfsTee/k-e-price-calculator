@@ -3,6 +3,7 @@ import InputComp from './InputComp';
 
 
 const Calc = () => {
+    const toFixed = 4
     const [inputs, setInputs] = useState([0]);
     const [rabatt, setRabatt] = useState(0);
     const [values, setValues] = useState({ pic0: "0" });
@@ -33,21 +34,25 @@ const Calc = () => {
     }, [inputs, rabatt, values, frame, mwSt]);
     const calcAll = () => {
         // Bild berechnen
-        const picNetto = ((Object.values(values)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / `1.${mwSt}`).toFixed(2) * 1)), 0)) * ((100 - rabatt) / 100)
-        // const picNetto = ((Object.values(values)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / `1.${mwSt}`).toFixed(2) * 1)), 0)).toFixed(2)
-        const picMwSt = ((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) - ((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) / `1.${mwSt}`)) * ((100 - rabatt) / 100)
-        const picTotal = (picNetto * 1 + picMwSt * 1).toFixed(2)
+        // const picNetto = ((Object.values(values)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / `1.${mwSt}`).toFixed(toFixed) * 1)), 0)) * ((100 - rabatt) / 100)
+        const picNetto = ((Object.values(values)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / `1.${mwSt}`).toFixed(toFixed) * 1)), 0))
+        // const picNetto = ((Object.values(values)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / `1.${mwSt}`).toFixed(toFixed) * 1)), 0)).toFixed(toFixed)
+        const picMwSt = ((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) - ((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) / `1.${mwSt}`))
+        const picTotal = (picNetto * 1 + picMwSt * 1).toFixed(toFixed)
 
         // Rahmen berechnen
-        const frameNetto = ((Object.values(frame)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / `1.${mwSt}`).toFixed(2) * 1)), 0)).toFixed(2)
-        const frameMwSt = ((Object.values(frame)).reduce((prev, curr) => prev * 1 + curr * 1) - ((Object.values(frame)).reduce((prev, curr) => prev * 1 + curr * 1) / `1.${mwSt}`)).toFixed(2)
-        const frameTotal = (frameNetto * 1 + frameMwSt * 1).toFixed(2)
+        const frameNetto = ((Object.values(frame)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / `1.${mwSt}`).toFixed(toFixed) * 1)), 0)).toFixed(toFixed)
+        const frameMwSt = ((Object.values(frame)).reduce((prev, curr) => prev * 1 + curr * 1) - ((Object.values(frame)).reduce((prev, curr) => prev * 1 + curr * 1) / `1.${mwSt}`)).toFixed(toFixed)
+        const frameTotal = (frameNetto * 1 + frameMwSt * 1).toFixed(toFixed)
 
         // Zusammenführen
 
-        const mwStTotal = (picMwSt * 1 + frameMwSt * 1).toFixed(2)
-        const nettoTotal = (picNetto * 1 + frameNetto * 1).toFixed(2)
-        const total = (nettoTotal * 1 + mwStTotal * 1).toFixed(2)
+        const mwStTotal = (picMwSt * 1 + frameMwSt * 1).toFixed(toFixed)
+        const nettoTotal = (picNetto * 1 + frameNetto * 1).toFixed(toFixed)
+        const total = (nettoTotal * 1 + mwStTotal * 1).toFixed(toFixed)
+        const picNettoRabatt = ((Object.values(values)).reduce((prev, curr) => (parseFloat(prev) + ((parseFloat(curr) / `1.${mwSt}`).toFixed(toFixed) * 1)), 0)) * ((100 - rabatt) / 100)
+        const picMwStRabatt = ((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) - ((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1) / `1.${mwSt}`)) * ((100 - rabatt) / 100)
+        const picRabatt = picTotal - (picNettoRabatt + picMwStRabatt)
         setResult({
             total,
             picNetto,
@@ -56,6 +61,7 @@ const Calc = () => {
             frameMwSt,
             mwStTotal,
             nettoTotal,
+            picRabatt
         })
     }
     return (
@@ -82,8 +88,8 @@ const Calc = () => {
                         onChange={({ target }) => setValues(state => ({ ...state, [target.name]: target.value }))}
                         value={values[`pic${ele}`]}
                     />
-                    <div className="ergebnis">{((values[`pic${ele}`] / `1.${mwSt}`) * ((100 - rabatt) / 100)).toFixed(2)} €</div>
-                    <div className="ergebnis">{((values[`pic${ele}`] - (values[`pic${ele}`] / `1.${mwSt}`)) * ((100 - rabatt) / 100)).toFixed(2)} €</div>
+                    <div className="ergebnis">{((values[`pic${ele}`] / `1.${mwSt}`)).toFixed(toFixed)} €</div>
+                    <div className="ergebnis">{((values[`pic${ele}`] - (values[`pic${ele}`] / `1.${mwSt}`))).toFixed(toFixed)} €</div>
                 </div>
                 <div className="grid">
                     <span>Rahmen {ele + 1}:</span>
@@ -93,16 +99,15 @@ const Calc = () => {
                         onChange={({ target }) => setFrame(state => ({ ...state, [target.name]: target.value }))}
                         value={frame[ele]}
                     />
-                    <div className="ergebnis">{(frame[`frame${ele}`] / `1.${mwSt}`).toFixed(2)} €</div>
-                    <div className="ergebnis">{(frame[`frame${ele}`] - (frame[`frame${ele}`] / `1.${mwSt}`)).toFixed(2)} €</div>
+                    <div className="ergebnis">{(frame[`frame${ele}`] / `1.${mwSt}`).toFixed(toFixed)} €</div>
+                    <div className="ergebnis">{(frame[`frame${ele}`] - (frame[`frame${ele}`] / `1.${mwSt}`)).toFixed(toFixed)} €</div>
                 </div>
             </div>
             )}
             {/* map end */}
 
             <div className="grid">
-                <div>Gesammt:</div>
-                {/* <div className="ergebnis">{((((Object.values(values)).reduce((prev, curr) => prev * 1 + curr * 1)) * 1).toFixed(2))} €</div> */}
+                <div>Gesamt:</div>
                 <div className="ergebnis">{
                     result.total
                 } €</div>
@@ -111,12 +116,22 @@ const Calc = () => {
 
                 <div className="ergebnis">{result.mwStTotal} €</div>
             </div>
-            <span className="text">Rabatt:</span><input type="number" name="rabatt" onChange={({ target }) => setRabatt(target.value)} value={rabatt} />
+            <span className="text">Rabatt:</span>
+            <input type="number" name="rabatt" onChange={({ target }) => setRabatt(target.value)} value={rabatt} /> <br />
+            <div className="grid">
+                <div></div>
+                <div className="ergebnis">{
+                    (result.picRabatt * 1).toFixed(toFixed)
+                } €</div>
 
+                <div className="ergebnis">{ } €</div>
+
+                <div className="ergebnis">{ } €</div>
+            </div>
             <style jsx>{`
             .grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, 75px);
+                grid-template-columns: repeat(auto-fill, 100px);
                 gap: 5px;
             }
             .grid.center {
@@ -124,15 +139,14 @@ const Calc = () => {
             }
             .text, .ergebnis {
                 display:inline-block;
-                min-width: 75px;
+                min-width: 100px;
             }
             .ergebnis {
                 text-align: right;
             }
             [type="number"] {
-                color: red;
-                display: inline-block;
-                width: 75px
+                display: block;
+                width: 100px
             }
       `}</style>
         </main >
