@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-import InputComp from './InputComp';
-
 
 const Calc = () => {
     const toFixed = 4
     const [inputs, setInputs] = useState([0]);
     const [rabatt, setRabatt] = useState(0);
-    const [values, setValues] = useState({ pic0: "" });
-    const [frame, setFrame] = useState({ frame0: "" });
+    const [values, setValues] = useState({ pic0: "0" });
+    const [frame, setFrame] = useState({ frame0: "0" });
     const [mwSt, setMwSt] = useState("07");
     const [result, setResult] = useState({
         total: 0,
@@ -17,6 +15,7 @@ const Calc = () => {
         frameMwSt: 0,
         mwStTotal: 0,
         nettoTotal: 0,
+        picTotal: 0
     });
     const handleAdd = () => {
         setInputs(state => [...state, inputs.length])
@@ -61,7 +60,8 @@ const Calc = () => {
             frameMwSt,
             mwStTotal,
             nettoTotal,
-            picRabatt
+            picRabatt,
+            picTotal
         })
     }
     return (
@@ -108,26 +108,52 @@ const Calc = () => {
 
             <div className="grid gesamt">
                 <div>Gesamt:</div>
-                <div className="ergebnis">{
-                    result.total
-                } €</div>
+                <div className="ergebnis">{result.total} €</div>
 
                 <div className="ergebnis">{result.nettoTotal} €</div>
 
                 <div className="ergebnis">{result.mwStTotal} €</div>
             </div>
-            <span className="text">Rabatt:</span>
+            <span className="text rabatt">Rabatt in %:</span>
             <input type="number" name="rabatt" onChange={({ target }) => setRabatt(target.value)} value={rabatt} /> <br />
-            <div className="grid">
-                <div></div>
-                <div className="ergebnis">{
-                    (result.picRabatt * 1).toFixed(toFixed)
+            <div className="ergebnis-grid">
+                <div>{rabatt}% Rabatt auf alle Bilder:</div>
+                <div>{
+                    (result.picNetto * 0.01 * rabatt).toFixed(toFixed)
                 } €</div>
 
-                <div className="ergebnis">{ } €</div>
-
-                <div className="ergebnis">{ } €</div>
+                <div>NettoBilder abzüglich Rabatt:</div>
+                <div>{
+                    (result.picNetto - ((result.picNetto * 0.01 * rabatt).toFixed(toFixed))).toFixed(toFixed)
+                } €</div>
+                <div>NettoRahmen gesamt:</div>
+                <div>
+                    {result.frameNetto} €
+                </div>
+                <div>Netto gesamt:</div>
+                <div>
+                    {
+                        result.picNetto - ((result.picNetto * 0.01 * rabatt).toFixed(toFixed)) + result.frameNetto * 1
+                    } €
+                </div>
+                <div>
+                    MwSt:
+                </div>
+                <div>
+                    {
+                        ((result.picNetto - ((result.picNetto * 0.01 * rabatt).toFixed(toFixed)) + result.frameNetto * 1) * .01 * mwSt).toFixed(toFixed)
+                    } €
+                </div>
+                <div>Brutto gesamt:</div>
+                <div>
+                    {
+                        result.picNetto - ((result.picNetto * 0.01 * rabatt).toFixed(toFixed)) + result.frameNetto * 1
+                        +
+                        ((result.picNetto - ((result.picNetto * 0.01 * rabatt).toFixed(toFixed)) + result.frameNetto * 1) * .01 * mwSt).toFixed(toFixed) * 1
+                    } €
+                </div>
             </div>
+
             <style jsx>{`
             .steuersatz {
                 margin-right: 10px;
@@ -156,8 +182,21 @@ const Calc = () => {
                 font-weight: 600;
             }
             [type="number"] {
-                display: block;
                 width: 100px
+            }
+            .ergebnis-grid {
+                display: grid;
+                grid-template-columns: repeat(2, max-content);
+                column-gap: 10px
+            }
+            .ergebnis-grid div {
+                align-self: end;
+            }
+            .ergebnis-grid div:nth-of-type(2n) {
+                text-align: right;
+            }
+            .rabatt {
+                margin-top: 20px;
             }
       `}</style>
         </main >
