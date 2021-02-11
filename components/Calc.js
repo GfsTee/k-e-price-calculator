@@ -6,8 +6,8 @@ const Calc = () => {
     const toFixed = 4
     const [inputs, setInputs] = useState([0]);
     const [rabatt, setRabatt] = useState(0);
-    const [values, setValues] = useState({ pic0: "0" });
-    const [frame, setFrame] = useState({ frame0: "0" });
+    const [values, setValues] = useState({ pic0: "" });
+    const [frame, setFrame] = useState({ frame0: "" });
     const [mwSt, setMwSt] = useState("07");
     const [result, setResult] = useState({
         total: 0,
@@ -66,7 +66,7 @@ const Calc = () => {
     }
     return (
         <main>
-            <span> Steuersatz:</span>
+            <span className="steuersatz"> Steuersatz:</span>
             <select onChange={({ target }) => setMwSt(target.value)} value={mwSt}>
                 <option value="05">5%</option>
                 <option value="07" defaultValue>7%</option>
@@ -97,7 +97,7 @@ const Calc = () => {
                         type="number"
                         name={`frame${ele}`}
                         onChange={({ target }) => setFrame(state => ({ ...state, [target.name]: target.value }))}
-                        value={frame[ele]}
+                        value={frame[`frame${ele}`]}
                     />
                     <div className="ergebnis">{(frame[`frame${ele}`] / `1.${mwSt}`).toFixed(toFixed)} €</div>
                     <div className="ergebnis">{(frame[`frame${ele}`] - (frame[`frame${ele}`] / `1.${mwSt}`)).toFixed(toFixed)} €</div>
@@ -106,7 +106,7 @@ const Calc = () => {
             )}
             {/* map end */}
 
-            <div className="grid">
+            <div className="grid gesamt">
                 <div>Gesamt:</div>
                 <div className="ergebnis">{
                     result.total
@@ -129,10 +129,16 @@ const Calc = () => {
                 <div className="ergebnis">{ } €</div>
             </div>
             <style jsx>{`
+            .steuersatz {
+                margin-right: 10px;
+            }
             .grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, 100px);
                 gap: 5px;
+            }
+            .center {
+                margin-top: 10px;
             }
             .grid.center {
                 text-align: center;
@@ -143,6 +149,11 @@ const Calc = () => {
             }
             .ergebnis {
                 text-align: right;
+            }
+            .gesamt {
+                margin-top: 5px;
+                border-top: 1px solid #000;
+                font-weight: 600;
             }
             [type="number"] {
                 display: block;
